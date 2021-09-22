@@ -1,0 +1,618 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Connected Car API for Social Connections",
+    "version": "1.0",
+    "description": "Current documentation contains only Connected Car API that only relates to Socail Connections (relationship between users who wnat to share their Gamification results/achievements)."
+  },
+  "servers": [
+    {
+      "url": "https://poc.connectedcar360.net/V1/"
+    },
+    {
+      "url": "https://tryg-stg.connectedcar360.net/V1/"
+    }
+  ],
+  "paths": {
+    "/odata/SocialConnections": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "ODATA"
+        ],
+        "summary": "Get all social connections (authenticated by admin)",
+        "operationId": "OData List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SocialConnection"
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": [
+                      {
+                        "RequesterId": 1,
+                        "AccepterId": 2,
+                        "AcceptedOn": "12-12-2021",
+                        "RejectedOn": null,
+                        "DdeactivatedOn": null,
+                        "IsActive": true,
+                        "IsRequested": true,
+                        "Requester": {
+                          "Id": 1,
+                          "UserName": "John Doe",
+                          "Email": "a@b.com"
+                        },
+                        "Accepter": {
+                          "Id": 2,
+                          "UserName": "Jane Doe",
+                          "Email": "a1@b.com"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "List of connections where user is requester or accepter",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Get by Id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SocialConnection"
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "RequesterId": 1,
+                      "AccepterId": 2,
+                      "AcceptedOn": "12-12-2021",
+                      "RejectedOn": null,
+                      "DdeactivatedOn": null,
+                      "IsActive": true,
+                      "IsRequested": true,
+                      "Requester": {
+                        "Id": 1,
+                        "UserName": "John Doe",
+                        "Email": "a@b.com"
+                      },
+                      "Accepter": {
+                        "Id": 2,
+                        "UserName": "Jane Doe",
+                        "Email": "a1@b.com"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Social connection not found"
+          }
+        },
+        "description": "Gets connection by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections/Sent": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Get Sent List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SocialConnection"
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": [
+                      {
+                        "requesterId": 1,
+                        "accepterId": 2,
+                        "acceptedOn": "12-12-2021",
+                        "rejectedOn": null,
+                        "deactivatedOn": null,
+                        "isActive": true,
+                        "isRequested": true,
+                        "requester": {
+                          "id": 1,
+                          "userName": "John Doe",
+                          "email": "a@b.com"
+                        },
+                        "accepter": {
+                          "id": 2,
+                          "userName": "Jane Doe",
+                          "email": "a1@b.com"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "List of connections sent by user",
+        "parameters": [
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "name": "pendingOnly",
+            "description": "Shows only social connections awaiting for acceptance"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections/Received": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Get Received List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SocialConnection"
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": [
+                      {
+                        "requesterId": 1,
+                        "accepterId": 2,
+                        "acceptedOn": "12-12-2021",
+                        "rejectedOn": null,
+                        "deactivatedOn": null,
+                        "isActive": true,
+                        "isRequested": true,
+                        "requester": {
+                          "id": 1,
+                          "userName": "John Doe",
+                          "email": "a@b.com"
+                        },
+                        "accepter": {
+                          "id": 2,
+                          "userName": "Jane Doe",
+                          "email": "a1@b.com"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "List of connections sent by user",
+        "parameters": [
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "Shows only social connections awaiting for acceptance",
+            "name": "pendingOnly"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections/Active": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Get Active List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SocialConnection"
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": [
+                      {
+                        "requesterId": 1,
+                        "accepterId": 2,
+                        "acceptedOn": "12-12-2021",
+                        "rejectedOn": null,
+                        "deactivatedOn": null,
+                        "isActive": true,
+                        "isRequested": true,
+                        "requester": {
+                          "id": 1,
+                          "userName": "John Doe",
+                          "email": "a@b.com"
+                        },
+                        "accepter": {
+                          "id": 2,
+                          "userName": "Jane Doe",
+                          "email": "a1@b.com"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "List of active connections where user is accepter or receiver",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections": {
+      "parameters": [],
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Create",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialConnection"
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "RequesterId": 1,
+                      "AccepterId": 2,
+                      "AcceptedOn": "12-12-2021",
+                      "RejectedOn": null,
+                      "DdeactivatedOn": null,
+                      "IsActive": true,
+                      "IsRequested": true,
+                      "Requester": {
+                        "Id": 1,
+                        "UserName": "John Doe",
+                        "Email": "a@b.com"
+                      },
+                      "Accepter": {
+                        "Id": 2,
+                        "UserName": "Jane Doe",
+                        "Email": "a1@b.com"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error\nSocial connection already exists"
+          }
+        },
+        "description": "Creates social connection request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSocialConnectionRequest"
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "email": "test@test.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SocialConnections/{id}/Accept": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Accept",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Social Connection {id} not found"
+          },
+          "500": {
+            "description": "You can only accept requests aimed to you\nSocial connection request deactivated\nSocial connection request was rejected"
+          }
+        },
+        "description": "Accepts social connection request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections/{id}/Reject": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Reject",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Social Connection {id} not found"
+          },
+          "500": {
+            "description": "You can only reject requests aimed to you\nSocial connection request deactivated"
+          }
+        },
+        "description": "Rejects social connection request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/SocialConnections/{id}/Deactivate": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "",
+        "operationId": "Revoke",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Social Connection {id} not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "description": "Deactivates social connection request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "description": "User",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "description": "Unique identifier for the given user."
+          },
+          "UserName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          }
+        }
+      },
+      "SocialConnection": {
+        "title": "SocialConnection",
+        "type": "object",
+        "example": [
+          {
+            "Id": 1,
+            "RequesterId": 1,
+            "AcceptorId": 2,
+            "AcceptedOn": "12-12-2021",
+            "RejectedOn": null,
+            "DeactivatedOn": null,
+            "Requester": {
+              "Id": 1,
+              "UserName": "John Doe",
+              "Email": "jhd@test.com"
+            },
+            "Accepter": {
+              "Id": 2,
+              "UserName": "Jane Doe",
+              "Email": "jd@test.com"
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "requesterId": {
+            "type": "integer"
+          },
+          "acceptorId": {
+            "type": "integer"
+          },
+          "acceptedOn": {
+            "type": "string"
+          },
+          "rejectedOn": {
+            "type": "string"
+          },
+          "deactivatedOn": {
+            "type": "string"
+          },
+          "requester": {
+            "$ref": "#/components/schemas/User"
+          },
+          "acceptor": {
+            "$ref": "#/components/schemas/User"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isRequested": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateSocialConnectionRequest": {
+        "title": "CreateSocialConnectionRequest",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "example": [
+          {
+            "Email": "test@test.com"
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "pendingOnly": {
+        "name": "pendingOnly",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "boolean"
+        },
+        "description": "Shows only social connections awaiting for acceptance"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "Standard header should be used Authorization Bearer 'token'",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
