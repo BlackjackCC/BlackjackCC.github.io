@@ -1,16 +1,14 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Connected Car API for Social Connections",
-    "version": "1.0",
+    "title": "Connected Car API for Social Connections",    
     "description": "Current documentation contains only Connected Car API that only relates to Socail Connections (relationship between users who wnat to share their Gamification results/achievements)."
+	"version": "1.0",
+	"termsOfService": "Scope Technology @ 2022",
   },
   "servers": [
     {
       "url": "https://poc.connectedcar360.net/V1/"
-    },
-    {
-      "url": "https://tryg-stg.connectedcar360.net/V1/"
     }
   ],
   "paths": {
