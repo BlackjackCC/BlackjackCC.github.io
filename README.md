@@ -1,2 +1,5 @@
 # BlackjackCC.github.io
-Scope Technology New Corporate WEB 
+
+
+This project is used to maintain and share public documentation by feature.
+Published documentation is available here: https://blackjackcc.github.io/
