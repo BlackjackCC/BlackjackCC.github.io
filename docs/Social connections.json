@@ -2,9 +2,9 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Connected Car API for Social Connections",    
-    "description": "Current documentation contains only Connected Car API that only relates to Socail Connections (relationship between users who wnat to share their Gamification results/achievements)."
+    "description": "Current documentation contains only Connected Car API that only relates to Socail Connections (relationship between users who want to share their Gamification results/achievements).",
 	"version": "1.0",
-	"termsOfService": "Scope Technology @ 2022",
+	"termsOfService": "Scope Technology @ 2024",
   },
   "servers": [
     {
