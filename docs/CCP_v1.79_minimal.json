@@ -1,0 +1,6576 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Minimal Connected Car API and Odata Controllers",
+    "description": "This documentation provides comprehensive details about the Connected Car REST APIs, which facilitate seamless integration with Scope Technology products and services. \r\n Most endpoints require **Bearer Token Authentication** for secure access. Each request must include an `Authorization` header with the token in the following format: \r\n Authorization: Bearer <your-token> \r\n However, some APIs, such as end-user registration, password reset, and translations, can be called without a Bearer token. ",
+    "version": "CCP v1.79"
+  },
+  "tags": [
+    {
+      "name": "Authorization"
+    },
+    {
+      "name": "Account"
+    },
+    {
+      "name": "Agreements"
+    },
+    {
+      "name": "Analytics"
+    },
+    {
+      "name": "InsuredPersons"
+    },
+    {
+      "name": "Notifications"
+    },
+    {
+      "name": "Password"
+    },
+    {
+      "name": "Policies"
+    },
+    {
+      "name": "PolicyFileUpload"
+    },
+    {
+      "name": "PolicyVehicleUnits"
+    },
+    {
+      "name": "PreTrips"
+    },
+    {
+      "name": "Settings"
+    },
+    {
+      "name": "Users"
+    },
+    {
+      "name": "Vehicles"
+    },
+    {
+      "name": "NotificationsOData"
+    },
+    {
+      "name": "PolicyUploadsOData"
+    },
+    {
+      "name": "PolicyVehicleUnitsOData"
+    },
+    {
+      "name": "PreTripsOData"
+    },
+    {
+      "name": "RawNotificationsOData"
+    },
+    {
+      "name": "SubscriptionChangesOData"
+    },
+    {
+      "name": "UnitActivityIntervalOData"
+    },
+    {
+      "name": "UsersSimpleOData"
+    },
+    {
+      "name": "VehiclesOData"
+    }
+  ],
+  "paths": {
+    "/token": {
+      "post": {
+        "summary": "Get token",
+        "deprecated": false,
+        "description": "Generates an access token by providing a username and password.",
+        "tags": [
+          "Authorization"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "grant_type": {
+                    "description": " The type of grant being requested. Possible values include:\n- `password`: Resource Owner Password Credentials Grant\n- `token`: Expects an access token (JWT) from an external OAuth provider (Implicit Grant)\n- `authorization_code`: Expects an authorization code from an external OAuth provider (Authorization Code Grant)",
+                    "example": "",
+                    "type": "string"
+                  },
+                  "username": {
+                    "description": "Username to log into CCP.",
+                    "example": "",
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "Password to log in",
+                    "example": "",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "description": "The authorization token value.",
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "description": "The type of token, always \"Bearer.\""
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "description": "The validity period of the token in seconds. The default is 14 days unless configured otherwise."
+                    },
+                    "userId": {
+                      "type": "integer",
+                      "description": "The unique ID of the user in CCP."
+                    },
+                    "userName": {
+                      "type": "string",
+                      "description": "The unique username in CCP."
+                    },
+                    "role": {
+                      "type": "string",
+                      "description": "The role of the user, which could be:\n  - `Administrator`\n  - `WorkshopAdministrator` (obsolete)\n  - `Insured` (end-user)"
+                    },
+                    "userDisplayName": {
+                      "type": "string",
+                      "description": "The display name of the user. If provided during registration, this typically includes the user's name and surname."
+                    },
+                    ".issued": {
+                      "type": "string",
+                      "description": "The date and time when the token was issued, in RFC 3339 format."
+                    },
+                    ".expires": {
+                      "type": "string",
+                      "description": "The date and time when the token will expire, in RFC 3339 format."
+                    }
+                  },
+                  "required": [
+                    "access_token",
+                    "token_type",
+                    "expires_in",
+                    "userId",
+                    "userName",
+                    "role",
+                    "userDisplayName",
+                    ".issued",
+                    ".expires"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/account/ChangePassword": {
+      "post": {
+        "summary": "Allows the currently logged-in user to change their password. The user must provide their old password for verification before setting a new password.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Account_ChangePassword",
+        "tags": [
+          "Account"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "OldPassword": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "NewPassword": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ConfirmPassword": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "OldPassword",
+                  "NewPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/account/{oldName}/ChangeUserName": {
+      "post": {
+        "summary": "Updates a user's name by replacing the old username with a new one. This method ensures that the username is unique and valid before making the change.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Account_ChangeUserName",
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "oldName",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/account/RegisterWithPolicy": {
+      "post": {
+        "summary": "Registers an insured person by associating their account with a specified customer number / policy number / device number depending on the tenant configuration. This method ensures the insured individual is linked to the correct policy for authentication ",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Account_RegisterWithPolicy",
+        "tags": [
+          "Account",
+          "Account"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "UserName": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "Password": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "PolicyOrCustomerNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "Reference": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "SerialNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "AgreementAccepted": {
+                    "type": "boolean",
+                    "example": ""
+                  },
+                  "CaptchaResponse": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "YoungDriverUserType": {
+                    "format": "int32",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "type": "integer",
+                    "example": 0
+                  }
+                },
+                "required": [
+                  "UserName",
+                  "Password",
+                  "AgreementAccepted"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "format": "int32",
+                  "type": "integer"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Agreements": {
+      "get": {
+        "summary": "Retrieves agreement of the specific type for the currently logged-in user and his subscription.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Agreements_Get",
+        "tags": [
+          "Agreements"
+        ],
+        "parameters": [
+          {
+            "name": "pvu",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Agreement type (int)",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.AgreementData"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "Adds new agreement of the specific type for the currently logged-in user and his subscription.\r\nIf such agreement exist, error will be returned.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Agreements_Post",
+        "tags": [
+          "Agreements",
+          "Agreements"
+        ],
+        "parameters": [
+          {
+            "name": "pvu",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Type": {
+                    "format": "int32",
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9
+                    ],
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DateAccepted": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.AgreementData"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/TenantProperties": {
+      "get": {
+        "summary": "Retrieves tenant settings from D-Insight. \r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetTenantProperties",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpTenantProperties"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/Expressions": {
+      "get": {
+        "summary": "Retrieves expressions for a specified period from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person. \r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehicle-related data, or  \r\n  - Provide a user ID for",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetExpressions",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpExpression"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/TripExpressions": {
+      "get": {
+        "summary": "Retrieves trip expressions for a specified period from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.\r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehicle-related data, or  \r\n  - Provide a user ID",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetTripExpressions",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpExpression"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/Variables": {
+      "get": {
+        "summary": "Retrieves variables for a specified period from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.\r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehicle-related data, or  \r\n  - Provide a user ID for dr",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetVariables",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpVariable"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/TripVariables": {
+      "get": {
+        "summary": "Retrieves trip variables for a specified subscription from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetTripVariables",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Trip start",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "Trip end",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpVariable"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/TripDetails": {
+      "get": {
+        "summary": "Retrieves multiple trips details for specific period for subscription from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetTripDetails",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpTripDetails"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/Score": {
+      "get": {
+        "summary": "Retrieves vehicle score or driver score for a specified period from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.\r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehicle-related data, or  \r\n  - Prov",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetScore",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpDrivingScore"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/Feedback": {
+      "get": {
+        "summary": "Retrieves vehicle or driver driving feedback for a specified period from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.\r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehicle-related data, or  \r\n  -",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetFeedback",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End date (required)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpDrivingFeedback"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/ScoreRank": {
+      "get": {
+        "summary": "Retrieves vehicle score rank from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetScoreRank",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "profileDate",
+            "in": "query",
+            "description": "D-Insight profile date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpScoreRank"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/ScoreOverPeriod": {
+      "get": {
+        "summary": "Retrieves vehicle scores list and driving summary over period split by interval (daily, weekly, monthly) from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetScoreOverPeriod",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "interval",
+            "in": "query",
+            "description": "Define intervals that given date range can be split: 0 - Daily, 1 - Weekly, 2 - Monthly",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start period",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End period",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpDrivingScoreList"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/DriverAvailability": {
+      "get": {
+        "summary": "Check if specific driver is available in D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetDriverAvailability",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpDriverInCube"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/ProfileStatistics": {
+      "get": {
+        "summary": "Retrieves profile statistics (avarage score, participants count, etc) for D-Insight tenant.\r\nThis method can be executed by an Admin or an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetProfileStatistics",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "profileDate",
+            "in": "query",
+            "description": "D-Insight profile date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpProfileStatistics"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/VariablesOverPeriod": {
+      "get": {
+        "summary": "Retrieves vehicle or driver variables over period split by interval (daily, weekly, monthly) from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.\r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehicl",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetVariablesOverPeriod",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start period",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End period",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "description": "Intervals that given date range can be split: 0 - Daily, 1 - Weekly, 2 - Monthly",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpVariableIntervalValues"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/ExpressionsOverPeriod": {
+      "get": {
+        "summary": "Retrieves vehicle or driver expressions over period split by interval (daily, weekly, monthly) from D-Insight.\r\nThis method can be executed by an Admin or an Insured Person.\r\n\r\n- If executed by an Admin: \r\n  - Include a subscription ID in the URL for vehi",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetExpressionsOverPeriod",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start period",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End period",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "description": "Intervals that given date range can be split: 0 - Daily, 1 - Weekly, 2 - Monthly",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "name": "subscription",
+            "in": "query",
+            "description": "Subscription Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "User Id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpExpressionIntervalValues"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Analytics/Profiles": {
+      "get": {
+        "summary": "/api/Analytics/Profiles",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Analytics_GetProfiles",
+        "tags": [
+          "Analytics",
+          "Analytics"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/InsuredPersons/Self": {
+      "get": {
+        "summary": "Get information about currently logged in user and his policy/vehicle",
+        "deprecated": false,
+        "description": "",
+        "operationId": "InsuredPersons_GetInfo",
+        "tags": [
+          "InsuredPersons",
+          "InsuredPersons"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.InsuredPersonData"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Notifications/GDPR/RequestCopy": {
+      "post": {
+        "summary": "Allows the currently logged-in user to create GdprCopyRequested notification\r\n(to request copy of the user data from Scope Technology).\r\nThis method can be executed by an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Notifications_CreateGdprCopyRequestedNotification",
+        "tags": [
+          "Notifications",
+          "Notifications"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Email": {
+                    "type": "string",
+                    "example": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Notifications/GDPR/DeleteData": {
+      "post": {
+        "summary": "Allows the currently logged-in user to create GdprDeletionRequested notification\r\n(to request deletion/removal of the user data from Scope Technology).\r\nThis method can be executed by an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Notifications_CreateGdprDeletionRequestedNotification",
+        "tags": [
+          "Notifications",
+          "Notifications"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Notifications/GDPR/ChangeData": {
+      "post": {
+        "summary": "Allows the currently logged-in user to create GdprChangeRequested notification\r\n(to request specific data change/update from Scope Technology).\r\nThis method can be executed by an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Notifications_CreateGdprChangeRequestedNotification",
+        "tags": [
+          "Notifications",
+          "Notifications"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Description": {
+                    "type": "string",
+                    "example": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Password/SendReset": {
+      "get": {
+        "summary": "Finds a user account and sends a password reset invitation email.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Password_SendResetLink",
+        "tags": [
+          "Password",
+          "Password"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "The username associated with the user account.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Password/Reset": {
+      "post": {
+        "summary": "Changes the user's password using a provided reset token.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Password_ResetPassword",
+        "tags": [
+          "Password",
+          "Password"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ResetToken": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "NewPassword": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ConfirmPassword": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "ResetToken",
+                  "NewPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Password/ResetWithCode": {
+      "post": {
+        "summary": "Changes the user's password using a provided reset code (short code).",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Password_ResetPasswordWithCode",
+        "tags": [
+          "Password",
+          "Password"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ResetCode": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "NewPassword": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ConfirmPassword": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "ResetCode",
+                  "NewPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Password/TokenIsValid": {
+      "get": {
+        "summary": "Verifies whether the provided password reset token is valid and not expired.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Password_TokenIsValid",
+        "tags": [
+          "Password",
+          "Password"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "The reset token to be validated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Password/CancelReset": {
+      "get": {
+        "summary": "Cancels the password reset operation associated with the specified reset code.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Password_CancelReset",
+        "tags": [
+          "Password",
+          "Password"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "The reset code to identify the password reset operation to be canceled",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/Add": {
+      "post": {
+        "summary": "Creates a new policy, adds or updates vehicle and customer details, assigns a unit, \r\nor creates one if necessary, based on the specified model data and tenant configuration.\r\nThis method can be executed only by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_Add",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Number": {
+                    "type": "string",
+                    "example": "Unique policy number"
+                  },
+                  "RequestedDeviceType": {
+                    "format": "int32",
+                    "enum": [
+                      0,
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      20,
+                      21,
+                      22,
+                      23,
+                      30,
+                      40,
+                      41,
+                      42,
+                      43,
+                      44,
+                      50,
+                      51,
+                      60
+                    ],
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "RequestedTripRecordingMode": {
+                    "format": "int32",
+                    "enum": [
+                      0,
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DeviceType": {
+                    "format": "int32",
+                    "enum": [
+                      0,
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      20,
+                      21,
+                      22,
+                      23,
+                      30,
+                      40,
+                      41,
+                      42,
+                      43,
+                      44,
+                      50,
+                      51,
+                      60
+                    ],
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DeliveryMethod": {
+                    "format": "int32",
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "DeliveryAddress": {
+                    "type": "object",
+                    "example": ""
+                  },
+                  "SignDate": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  },
+                  "StartDate": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ExpirationDate": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  },
+                  "Customer": {
+                    "$ref": "#/components/schemas/Blackjack.ViewModels.CustomerDataEditable"
+                  },
+                  "Vehicle": {
+                    "$ref": "#/components/schemas/Blackjack.ViewModels.Vehicle.VehicleDataEditable"
+                  },
+                  "Invite": {
+                    "$ref": "#/components/schemas/Blackjack.ViewModels.Invite.InviteDataEditable"
+                  },
+                  "Custom": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object"
+                    },
+                    "example": ""
+                  },
+                  "TrackingNumber": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "Number",
+                  "DeliveryMethod"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.Policy.PolicyAddViewModel"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/Renew": {
+      "post": {
+        "summary": "Terminates an existing policy and creates a new one for the same customer, vehicle, and unit.  \r\nThis method can only be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_Renew",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [
+          {
+            "name": "policyNumber",
+            "in": "query",
+            "description": "The policy number of the existing policy to be terminated.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "NewNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "RenewDate": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "NewNumber"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.Policy.PolicyViewModel"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/Terminate": {
+      "post": {
+        "summary": "Terminates an existing policy.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_Terminate",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [
+          {
+            "name": "policyNumber",
+            "in": "query",
+            "description": "The policy number of the existing policy to be terminated.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "DeliveryAddress": {
+                    "type": "object",
+                    "example": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/ChangeNumber": {
+      "post": {
+        "summary": "Updates the current policy number to a new one after validating its uniqueness.\r\nThis method can only be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_ChangeNumber",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CurrentNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "NewNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ChangeOnlyInPortal": {
+                    "type": "boolean",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "CurrentNumber",
+                  "NewNumber"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/ChangeCustomerNumber": {
+      "post": {
+        "summary": "Updates the current customer number to a new one after validating its uniqueness.\r\nThis method can only be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_ChangeCustomerNumber",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CurrentNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "NewNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ChangeOnlyInPortal": {
+                    "type": "boolean",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "CurrentNumber",
+                  "NewNumber"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/{number}/CustomFields": {
+      "get": {
+        "summary": "Retrieves custom fields of the specific policy.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_GetCustomFields",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [
+          {
+            "name": "number",
+            "in": "path",
+            "description": "The policy number for which custom fields are retrieved",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Policies/{policyNumber}/CustomFields/{name}": {
+      "put": {
+        "summary": "Creates or updates custom field for the specific policy.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Policies_CreateUpdateCustomField",
+        "tags": [
+          "Policies",
+          "Policies"
+        ],
+        "parameters": [
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "description": "The policy number for which custom field is added/updated.",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Custom field name",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PolicyFileUpload/": {
+      "post": {
+        "summary": "/api/PolicyFileUpload/",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PolicyFileUpload_Post",
+        "tags": [
+          "PolicyFileUpload",
+          "PolicyFileUpload"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.Upload.UploadedPolicyResults"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PolicyVehicleUnits/FriendlyName": {
+      "post": {
+        "summary": "Updates vehicle friendly name for the specified subscription.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PolicyVehicleUnits_UpdateFriendlyName",
+        "tags": [
+          "PolicyVehicleUnits",
+          "PolicyVehicleUnits"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SubscriptionId": {
+                    "format": "int32",
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "Name": {
+                    "type": "string",
+                    "example": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PreTrips/{subscriptionId}/{tripId}": {
+      "get": {
+        "summary": "Get pre-trip status and details.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PreTrips_GetById",
+        "tags": [
+          "PreTrips",
+          "PreTrips"
+        ],
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.TripMonitoring"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PreTrips/{subscriptionId}": {
+      "get": {
+        "summary": "Retrieves pre-trip details created during the specified time period for a specific subscription.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PreTrips_GetAll",
+        "tags": [
+          "PreTrips",
+          "PreTrips"
+        ],
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "description": "The ID of the subscription for which pre-trip details are to be retrieved",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "The start of the time period (optional)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "The end of the time period (optional).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.TripSimpleMonitoring"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PreTrips/{tripId}/Monitoring": {
+      "get": {
+        "summary": "Retrieves event batch details of the specific pre-trip.\r\nThis method can only be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PreTrips_GetMonitoringDetails",
+        "tags": [
+          "PreTrips",
+          "PreTrips"
+        ],
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "Pre-trip id",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.TripEventBatchMonitoring"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PreTrips/{id}/Resend": {
+      "post": {
+        "summary": "Resends specific pre-trip to MProfiler for processing.\r\nThis method can only be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PreTrips_Resend",
+        "tags": [
+          "PreTrips",
+          "PreTrips"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Pre-trip id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/PreTrips": {
+      "post": {
+        "summary": "Send pre-trip (batch with multiple drivin events) to MProfiler for processing.\r\nThis method can only be executed by an Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PreTrips_Post",
+        "tags": [
+          "PreTrips",
+          "PreTrips"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "batch_id": {
+                    "maxLength": 2147483647,
+                    "minLength": 1,
+                    "type": "string",
+                    "example": ""
+                  },
+                  "Username": {
+                    "maxLength": 2147483647,
+                    "minLength": 1,
+                    "type": "string",
+                    "example": ""
+                  },
+                  "TripId": {
+                    "maxLength": 2147483647,
+                    "minLength": 1,
+                    "type": "string",
+                    "example": ""
+                  },
+                  "DeviceId": {
+                    "maxLength": 2147483647,
+                    "minLength": 1,
+                    "type": "string",
+                    "example": ""
+                  },
+                  "DeviceName": {
+                    "maxLength": 2147483647,
+                    "minLength": 1,
+                    "type": "string",
+                    "example": ""
+                  },
+                  "Start": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  },
+                  "End": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ContainsTripStart": {
+                    "type": "boolean",
+                    "example": ""
+                  },
+                  "ContainsTripEnd": {
+                    "type": "boolean",
+                    "example": ""
+                  },
+                  "Events": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.TripEvent"
+                    },
+                    "example": ""
+                  },
+                  "ClientReportedOn": {
+                    "format": "date-time",
+                    "type": "string",
+                    "example": ""
+                  },
+                  "SBeaconTripId": {
+                    "type": "string",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "batch_id",
+                  "Username",
+                  "TripId",
+                  "DeviceId",
+                  "DeviceName",
+                  "Start",
+                  "End",
+                  "ContainsTripStart",
+                  "ContainsTripEnd",
+                  "Events"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.TripEventBatchResponse"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Settings/": {
+      "get": {
+          "summary": "Retrieves all publicly available tenant settings or a specific subset based on the provided setting names.",
+          "deprecated": false,
+          "description": "",
+          "operationId": "Settings_Get",
+          "tags": ["Settings"],
+          "parameters": [{
+                  "name": "settingNames",
+                  "in": "query",
+                  "description": "A list of setting names to filter the results (optional).",
+                  "required": true,
+                  "schema": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  }
+              }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "additionalProperties": {
+                      "type": "array",
+                      "properties": {
+                        "name": {"type": "string"},
+                        "value": {"type": "string"}
+                      }
+                    }
+                  }
+                }
+              },
+              "headers": {}
+            }
+          },
+          "security": []
+      }
+    },
+    "/api/Settings/MProfiler": {
+      "get": {
+        "summary": "Return Mprofiler settings (including internal settings).\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Settings_GetMprofilerSettings",
+        "tags": [
+          "Settings"          
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "array",
+                    "properties": {
+                      "name": {"type": "string"},
+                      "value": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Users/Self": {
+      "get": {
+        "summary": "Retrieves information about the currently logged-in user.\r\nThis method can be executed by an Admin or Insured Person.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Users_GetInfo",
+        "tags": [
+          "Users",
+          "Users"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.User.UserData"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/Vehicles/ChangeVin": {
+      "post": {
+        "summary": "Updates the vehicle's VIN number, ensuring its uniqueness within the system.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "Vehicles_ChangeVin",
+        "tags": [
+          "Vehicles",
+          "Vehicles"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CurrentNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "NewNumber": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "ChangeOnlyInPortal": {
+                    "type": "boolean",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "CurrentNumber",
+                  "NewNumber"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/Notifications": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of notifications.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "NotificationsOData_Get",
+        "tags": [
+          "NotificationsOData",
+          "NotificationsOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.Models.Entities.LegacyNotification%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/Notifications({key})": {
+      "get": {
+        "summary": "Get notification details by id",
+        "deprecated": false,
+        "description": "",
+        "operationId": "NotificationsOData_GetByKey",
+        "tags": [
+          "NotificationsOData",
+          "NotificationsOData"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Notification Id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.Models.Entities.LegacyNotification"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/PolicyUploads": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of policy uploads.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PolicyUploadsOData_Get",
+        "tags": [
+          "PolicyUploadsOData",
+          "PolicyUploadsOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ViewModels.Policy.PolicyUploadModel%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/PolicyUploads({key})": {
+      "get": {
+        "summary": "Get policy upload details by id.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PolicyUploadsOData_GetByKey",
+        "tags": [
+          "PolicyUploadsOData",
+          "PolicyUploadsOData"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Policy upload id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.Models.Entities.PolicyUpload"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/PolicyVehicleUnits": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of subscriptions.\r\nThis method can only be executed by an Admin with an \"PolicyPrivateData\" permission.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PolicyVehicleUnitsOData_Get",
+        "tags": [
+          "PolicyVehicleUnitsOData",
+          "PolicyVehicleUnitsOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ODataModels.Entities.PolicyVehicleUnitODataItem%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/PreTrips": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of pre-trips.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "PreTripsOData_GetPreTrips",
+        "tags": [
+          "PreTripsOData",
+          "PreTripsOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ViewModels.PreTrips.PreTripViewModel%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/RawNotifications": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of raw notifications (without translations).",
+        "deprecated": false,
+        "description": "",
+        "operationId": "RawNotificationsOData_Get",
+        "tags": [
+          "RawNotificationsOData",
+          "RawNotificationsOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ODataModels.Entities.NotificationODataItem%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/SubscriptionChanges": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of subscription changes.\r\nThis method can be executed by an Admin with \"SubscriptionChanges\" permission.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "SubscriptionChangesOData_Get",
+        "tags": [
+          "SubscriptionChangesOData",
+          "SubscriptionChangesOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ViewModels.SubscriptionChange.SubscriptionChangeViewModel%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/UnitActivityIntervals": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of unit activity intervals.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "UnitActivityIntervalOData_Get",
+        "tags": [
+          "UnitActivityIntervalOData",
+          "UnitActivityIntervalOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ODataModels.Entities.UnitActivityIntervalODataItem%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/SimpleUsers": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of users with simplified details.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "UsersSimpleOData_Get",
+        "tags": [
+          "UsersSimpleOData",
+          "UsersSimpleOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.ViewModels.User.UserSimpleDataViewModel%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/SimpleUsers({key})": {
+      "get": {
+        "summary": "Get user details by id",
+        "deprecated": false,
+        "description": "",
+        "operationId": "UsersSimpleOData_GetByKey",
+        "tags": [
+          "UsersSimpleOData",
+          "UsersSimpleOData"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.User.UserSimpleDataViewModel"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/Vehicles": {
+      "get": {
+        "summary": "Retrieves an OData v4 queryable list of vehicles.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "VehiclesOData_Get",
+        "tags": [
+          "VehiclesOData",
+          "VehiclesOData"
+        ],
+        "parameters": [
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filters the results, based on a Boolean condition.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Sorts the results.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Returns only the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skips the first n results.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$count",
+            "in": "query",
+            "description": "Includes a count of the matching results in the response.",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Swashbuckle.OData.ODataResponse%5BSystem.Collections.Generic.List%5BBlackjack.Models.Entities.Vehicle%5D%5D"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/Vehicles({Id})": {
+      "patch": {
+        "summary": "Updates specific vehicle fields (MakeModelCode, Make, Model, YearOfInitialRegistration, LicensePlate).\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "VehiclesOData_PatchById",
+        "tags": [
+          "VehiclesOData",
+          "VehiclesOData"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "description": "key: Id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Blackjack.Models.Entities.Vehicle"
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.Models.Entities.Vehicle"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/odata/Vehicles({key})": {
+      "get": {
+        "summary": "Get vehicle item by id.\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "VehiclesOData_GetByKey",
+        "tags": [
+          "VehiclesOData",
+          "VehiclesOData"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Vehicle Id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expands related entities inline.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Selects which properties to include in the response.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.Models.Entities.Vehicle"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "summary": "Updates specific vehicle fields (MakeModelCode, Make, Model, YearOfInitialRegistration, LicensePlate).\r\nThis method can be executed by an Admin.",
+        "deprecated": false,
+        "description": "",
+        "operationId": "VehiclesOData_PatchByKey",
+        "tags": [
+          "VehiclesOData",
+          "VehiclesOData"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Vehicle Id",
+            "required": true,
+            "example": 0,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Blackjack.Models.Entities.Vehicle"
+              },
+              "example": ""
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blackjack.Models.Entities.Vehicle"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Blackjack.Models.Entities.User": {
+        "type": "object",
+        "properties": {
+            "ExternalId": {
+                "type": "string"
+            },
+            "PasswordHash": {
+                "type": "string"
+            },
+            "PasswordHashDate": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "IsDisabled": {
+                "type": "boolean"
+            },
+            "IsRenamed": {
+                "type": "boolean"
+            },
+            "RenameReason": {
+                "format": "int32",
+                "enum": [1],
+                "type": "integer"
+            },
+            "SendTokenByEmail": {
+                "type": "boolean"
+            },
+            "Timezone": {
+                "type": "string"
+            },
+            "IsAdmin": {
+                "type": "boolean"
+            },
+            "IsWorkshopAdmin": {
+                "type": "boolean"
+            },
+            "SecurityStamp": {
+                "type": "string"
+            },
+            "DateCreated": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "ResetCode": {
+                "type": "string"
+            },
+            "ResetToken": {
+                "type": "string"
+            },
+            "ResetTokenExpires": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "ContactPersonId": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "NotificationsLastSeen": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "LastLoggedInOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "PersonalCodeHash": {
+                "type": "string"
+            },
+            "YoungDriverUserType": {
+                "format": "int32",
+                "enum": [0, 1, 2],
+                "type": "integer"
+            },
+            "AvatarKey": {
+                "type": "string"
+            },
+            "QuantigoUserCreatedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "QuantigoBlockchainSetOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "TenantId": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Tenant": {
+                "$ref": "#/components/schemas/Blackjack.Models.Entities.Tenant"
+            },
+            "AdminPermissions": {
+                "format": "int32",
+                "enum": [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456, 536870912, 1073741824],
+                "type": "integer"
+            },
+            "UserPermissions": {
+                "format": "int32",
+                "enum": [0, 1, 2],
+                "type": "integer"
+            },
+            "Role": {
+                "type": "string",
+                "readOnly": true
+            },
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "UserName": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.Models.Entities.Tenant": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Code": {
+                "type": "string"
+            },
+            "Description": {
+                "type": "string"
+            },
+            "PublicId": {
+                "format": "uuid",
+                "type": "string"
+            },
+            "CreatedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "Hostname": {
+                "type": "string",
+                "readOnly": true
+            }
+        }
+      },
+      "Blackjack.ViewModels.AgreementData": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Type": {
+            "format": "int32",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "type": "integer"
+          },
+          "DateAccepted": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "UserId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "PolicyId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Policy": {
+            "type": "object",
+            "properties": {}
+          },
+          "User": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.User.UserSimpleDataViewModel"
+          }
+        }
+      },
+      "Blackjack.ViewModels.User.UserSimpleDataViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "UserName": {
+            "type": "string"
+          },
+          "IsDisabled": {
+            "type": "boolean"
+          },
+          "IsAdmin": {
+            "type": "boolean"
+          },
+          "IsWorkshopAdmin": {
+            "type": "boolean"
+          },
+          "DateCreated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "TenantId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "HasSoftTypeUnit": {
+            "type": "boolean"
+          },
+          "HasAgreements": {
+            "type": "boolean"
+          },
+          "AdminPermissions": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              4,
+              8,
+              16,
+              32,
+              64,
+              128,
+              256,
+              512,
+              1024,
+              2048,
+              4096,
+              8192,
+              16384,
+              32768,
+              65536,
+              131072,
+              262144,
+              524288,
+              1048576,
+              2097152,
+              4194304,
+              8388608,
+              16777216,
+              33554432,
+              67108864,
+              134217728,
+              268435456,
+              536870912,
+              1073741824
+            ],
+            "type": "integer"
+          },
+          "UserPermissions": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "type": "integer"
+          },
+          "YoungDriverUserType": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "type": "integer"
+          }
+        }
+      },
+      "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ViewModels.User.UserSimpleDataViewModel]]": {
+        "type": "object",
+        "properties": {
+            "@odata.context": {
+                "type": "string"
+            },
+            "value": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ViewModels.User.UserSimpleDataViewModel"
+                }
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpTenantProperties": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "TenantProperties": {
+            "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.TenantProperties"
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.TenantProperties": {
+        "type": "object",
+        "properties": {
+            "TenantName": {
+                "type": "string"
+            },
+            "Timezone": {
+                "type": "string"
+            },
+            "Timezone_UtcOffset": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "MeasurementSystem": {
+                "type": "string"
+            },
+            "MaxProfileCount": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "IsActive": {
+                "type": "boolean"
+            },
+            "ChartSeriesMaxCount": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "ProfileVariablesMaxCount": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "MProfilerAccount": {
+                "type": "string"
+            },
+            "IsUnitSynchronizationEnabled": {
+                "type": "boolean"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpExpression": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpExpressionItem"
+            }
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpExpressionItem": {
+        "type": "object",
+        "properties": {
+            "Description": {
+                "type": "string"
+            },
+            "Id": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "Value": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpVariable": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpVariableItem"
+            }
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpVariableItem": {
+        "type": "object",
+        "properties": {
+            "Description": {
+                "type": "string"
+            },
+            "Id": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "Value": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpTripDetails": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpTripDetailsItem"
+            }
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpTripDetailsItem": {
+        "type": "object",
+        "properties": {
+            "StartTimestamp": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "EndTimestamp": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "Distance": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Duration": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Score": {
+                "format": "decimal",
+                "type": "number"
+            },
+            "Variables": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpTripDetailsVariableItem"
+                }
+            },
+            "Expressions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpTipDetailsExpressionItem"
+                }
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpTripDetailsVariableItem": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "Description": {
+                "type": "string"
+            },
+            "Value": {
+                "type": "string"
+            },
+            "UnitOfMeasure": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "ParameterName": {
+                "type": "string"
+            },
+            "ParameterId": {
+                "format": "int32",
+                "type": "integer"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpTipDetailsExpressionItem": {
+        "type": "object",
+        "properties": {
+            "Description": {
+                "type": "string"
+            },
+            "Id": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "Value": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpDrivingScore": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Score": {
+            "format": "double",
+            "type": "number"
+          },
+          "MinScore": {
+            "format": "double",
+            "type": "number"
+          },
+          "MaxScore": {
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpDrivingFeedback": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpDrivingFeedbackItem"
+            }
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpDrivingFeedbackItem": {
+        "type": "object",
+        "properties": {
+            "Title": {
+                "type": "string"
+            },
+            "Key": {
+                "type": "string"
+            },
+            "Description": {
+                "type": "string"
+            },
+            "CommonDescription": {
+                "type": "string"
+            },
+            "References": {
+                "type": "string"
+            },
+            "RangeMin": {
+                "format": "double",
+                "type": "number"
+            },
+            "RangeMax": {
+                "format": "double",
+                "type": "number"
+            },
+            "Value": {
+                "format": "double",
+                "type": "number"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpScoreRank": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpScoreRankItem"
+            }
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpScoreRankItem": {
+        "type": "object",
+        "properties": {
+            "DateSpan": {
+                "format": "int32",
+                "enum": [0, 1, 2, 3, 4, 5],
+                "type": "integer"
+            },
+            "ParticipantCount": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Rank": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Score": {
+                "format": "double",
+                "type": "number"
+            },
+            "Distance": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Duration": {
+                "format": "int32",
+                "type": "integer"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpDrivingScoreList": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpIntervalScore"
+            }
+          },
+          "Statistics": {
+            "$ref": "#/components/schemas/Blackjack.ExternalSystems.MZone.MZoneDrivingSummary"
+          },
+          "Average": {
+            "format": "double",
+            "type": "number"
+          },
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpIntervalScore": {
+        "type": "object",
+        "properties": {
+            "Score": {
+                "format": "double",
+                "type": "number"
+            },
+            "StartDate": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "EndDate": {
+                "format": "date-time",
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.MZone.MZoneDrivingSummary": {
+        "type": "object",
+        "properties": {
+            "DrivingTime": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "DrivingDistance": {
+                "format": "double",
+                "type": "number"
+            },
+            "MaxSpeed": {
+                "format": "double",
+                "type": "number"
+            },
+            "NumberOfExceptions": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "NumberOfTrips": {
+                "format": "int32",
+                "type": "integer"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpDriverInCube": {
+        "type": "object",
+        "properties": {
+          "IsAvailableInCube": {
+            "type": "boolean"
+          },
+          "IsAvailableInDatabase": {
+            "type": "boolean"
+          },
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpProfileStatistics": {
+        "type": "object",
+        "properties": {
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpProfileStatisticsItem"
+            }
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpProfileStatisticsItem": {
+        "type": "object",
+        "properties": {
+            "DateSpan": {
+                "format": "int32",
+                "enum": [0, 1, 2, 3, 4, 5],
+                "type": "integer"
+            },
+            "AverageScore": {
+                "format": "double",
+                "type": "number"
+            },
+            "ParticipantCount": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "TotalDistance": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "TotalDuration": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "AverageDistance": {
+                "format": "double",
+                "type": "number",
+                "readOnly": true
+            },
+            "AverageDuration": {
+                "format": "double",
+                "type": "number",
+                "readOnly": true
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpVariableIntervalValues": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpVariableIntervalValuesItem"
+            }
+          },
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpVariableIntervalValuesItem": {
+        "type": "object",
+        "properties": {
+            "UnitOfMeasure": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "ParameterName": {
+                "type": "string"
+            },
+            "ParameterId": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Description": {
+                "type": "string"
+            },
+            "Values": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpIntervalValue"
+                }
+            },
+            "Id": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpIntervalValue": {
+        "type": "object",
+        "properties": {
+            "Value": {
+                "format": "double",
+                "type": "number"
+            },
+            "StartDate": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "EndDate": {
+                "format": "date-time",
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpExpressionIntervalValues": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpExpressionIntervalValuesItem"
+            }
+          },
+          "ErrorCode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "ErrorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.ExternalSystems.Drp.Models.DrpExpressionIntervalValuesItem": {
+        "type": "object",
+        "properties": {
+            "Description": {
+                "type": "string"
+            },
+            "Values": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ExternalSystems.Drp.Models.DrpIntervalValue"
+                }
+            },
+            "Id": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ViewModels.Policy.PolicyViewModel": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "CustomerId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Number": {
+            "type": "string"
+          },
+          "DeliveryPersonId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Status": {
+            "format": "int32",
+            "enum": [
+              1,
+              2,
+              4,
+              8,
+              16,
+              32,
+              64
+            ],
+            "type": "integer"
+          },
+          "RequestedDeviceType": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              20,
+              21,
+              22,
+              23,
+              30,
+              40,
+              41,
+              42,
+              43,
+              44,
+              50,
+              51,
+              60
+            ],
+            "type": "integer"
+          },
+          "RequestedTripRecordingMode": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "type": "integer"
+          },
+          "SignDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "StartDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "ExpirationDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "TerminationDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "UniqueRequest": {
+            "type": "string"
+          },
+          "PolicyVehicleUnits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "DeliveryPerson": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+          },
+          "Customer": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.CustomerData"
+          },
+          "CustomPolicyFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.Policy.CustomPolicyFieldViewModel"
+            }
+          }
+        }
+      },
+      "Blackjack.ViewModels.CustomerData": {
+        "required": ["Number"],
+        "type": "object",
+        "properties": {
+            "Number": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "TenantId": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Contacts": {
+                "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+            }
+        }
+      },
+      "Blackjack.ViewModels.Policy.CustomPolicyFieldViewModel": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "Value": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.Models.Entities.PolicyUpload": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "UserId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "DateCreated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "FileBinaryContent": {
+            "format": "byte",
+            "type": "string"
+          },
+          "FileName": {
+            "type": "string"
+          },
+          "User": {
+            "$ref": "#/components/schemas/Blackjack.Models.Entities.User"
+          },
+          "TenantId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Tenant": {
+            "$ref": "#/components/schemas/Blackjack.Models.Entities.Tenant"
+          },
+          "ImportedCount": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Errors": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.Models.Entities.Vehicle": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "VIN": {
+            "type": "string"
+          },
+          "TenantId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Tenant": {
+            "$ref": "#/components/schemas/Blackjack.Models.Entities.Tenant"
+          },
+          "ReferenceNumber": {
+            "type": "string"
+          },
+          "Number": {
+            "type": "string",
+            "readOnly": true
+          },
+          "MakeModelCode": {
+            "type": "string"
+          },
+          "LicensePlate": {
+            "type": "string"
+          },
+          "Color": {
+            "format": "int32",
+            "enum": [
+              0,
+              128,
+              255,
+              32768,
+              32896,
+              65280,
+              6343827,
+              8388608,
+              8388736,
+              8421376,
+              8421504,
+              12632256,
+              16711680,
+              16711935,
+              16776960,
+              16777215
+            ],
+            "type": "integer"
+          },
+          "Make": {
+            "type": "string"
+          },
+          "Model": {
+            "type": "string"
+          },
+          "YearOfInitialRegistration": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "MotorType": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "type": "integer"
+          },
+          "Trim": {
+            "type": "string"
+          },
+          "ServicePlan": {
+            "type": "string"
+          },
+          "DateCreated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "LastModifiedDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "LastModifiedBy": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "OdometerUnit": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "type": "integer"
+          },
+          "CurrentOdometer": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "CurrentOdometerDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "PolicyVehicleUnits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.Models.Entities.PolicyVehicleUnit"
+            }
+          }
+        }
+      },
+      "Blackjack.ViewModels.InsuredPersonData": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "UserName": {
+            "type": "string"
+          },
+          "IsDisabled": {
+            "type": "boolean"
+          },
+          "Description": {
+            "type": "string"
+          },
+          "FirstName": {
+            "type": "string"
+          },
+          "LastName": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "Contacts": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+          },
+          "LanguageCode": {
+            "type": "string"
+          },
+          "CurrencyCode": {
+            "type": "string"
+          },
+          "CurrencySymbol": {
+            "type": "string"
+          },
+          "DistanceMeasure": {
+            "type": "string"
+          },
+          "FluidMeasure": {
+            "type": "string"
+          },
+          "SpeedMeasure": {
+            "type": "string"
+          },
+          "DefaultScore": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "YoungDriverUserType": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "type": "integer"
+          },
+          "InsuredVehicles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.InsuredVehicleUserData"
+            }
+          }
+        }
+      },
+      "Blackjack.ViewModels.ContactsData": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "FirstName": {
+                "type": "string"
+            },
+            "Name": {
+                "type": "string"
+            },
+            "Title": {
+                "type": "string"
+            },
+            "Email": {
+                "type": "string"
+            },
+            "Type": {
+                "format": "int32",
+                "enum": [0, 1, 2],
+                "type": "integer"
+            },
+            "ZipCode": {
+                "type": "string"
+            },
+            "Country": {
+                "type": "string"
+            },
+            "City": {
+                "type": "string"
+            },
+            "Address": {
+                "type": "string"
+            },
+            "CompanyName": {
+                "type": "string"
+            },
+            "Phone": {
+                "type": "string"
+            },
+            "MobilePhone": {
+                "type": "string"
+            },
+            "Gender": {
+                "type": "string"
+            },
+            "BirthDate": {
+                "type": "string"
+            },
+            "Nickname": {
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ViewModels.Policy.PolicyCreationData": {
+          "required": ["Number", "DeliveryMethod"],
+          "type": "object",
+          "properties": {
+              "Number": {
+                  "type": "string"
+              },
+              "RequestedDeviceType": {
+                  "format": "int32",
+                  "enum": [0, 1, 2, 3, 4, 5, 20, 21, 22, 23, 30, 40, 41, 42, 43, 44, 50, 51, 60],
+                  "type": "integer"
+              },
+              "RequestedTripRecordingMode": {
+                  "format": "int32",
+                  "enum": [0, 1, 2, 3, 4],
+                  "type": "integer"
+              },
+              "DeviceType": {
+                  "format": "int32",
+                  "enum": [0, 1, 2, 3, 4, 5, 20, 21, 22, 23, 30, 40, 41, 42, 43, 44, 50, 51, 60],
+                  "type": "integer"
+              },
+              "DeliveryMethod": {
+                  "format": "int32",
+                  "enum": [1, 2, 3],
+                  "type": "integer"
+              },
+              "DeliveryAddress": {
+                  "type": "object",
+                  "properties": {}
+              },
+              "SignDate": {
+                  "format": "date-time",
+                  "type": "string"
+              },
+              "StartDate": {
+                  "format": "date-time",
+                  "type": "string"
+              },
+              "ExpirationDate": {
+                  "format": "date-time",
+                  "type": "string"
+              },
+              "Customer": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.CustomerDataEditable"
+              },
+              "Vehicle": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.Vehicle.VehicleDataEditable"
+              },
+              "Invite": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.Invite.InviteDataEditable"
+              },
+              "Custom": {
+                  "type": "object",
+                  "additionalProperties": {
+                      "type": "object"
+                  },
+                  "properties": {}
+              },
+              "TrackingNumber": {
+                  "type": "string"
+              }
+          }
+      },
+      "Blackjack.ViewModels.CustomerDataEditable": {
+          "required": ["Number"],
+          "type": "object",
+          "properties": {
+              "OverrideData": {
+                  "type": "boolean"
+              },
+              "Number": {
+                  "type": "string"
+              },
+              "Name": {
+                  "type": "string"
+              },
+              "TenantId": {
+                  "format": "int32",
+                  "type": "integer"
+              },
+              "Contacts": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+              }
+          }
+      },
+      "Blackjack.ViewModels.Vehicle.VehicleData": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "VIN": {
+                "type": "string"
+            },
+            "MakeModelCode": {
+                "type": "string"
+            },
+            "LicensePlate": {
+                "type": "string"
+            },
+            "Color": {
+                "format": "int32",
+                "enum": [0, 128, 255, 32768, 32896, 65280, 6343827, 8388608, 8388736, 8421376, 8421504, 12632256, 16711680, 16711935, 16776960, 16777215],
+                "type": "integer"
+            },
+            "Make": {
+                "type": "string"
+            },
+            "Model": {
+                "type": "string"
+            },
+            "Trim": {
+                "type": "string"
+            },
+            "YearOfInitialRegistration": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "MotorType": {
+                "format": "int32",
+                "enum": [0, 1, 2, 3, 4, 5],
+                "type": "integer"
+            },
+            "ServicePlan": {
+                "type": "string"
+            },
+            "FriendlyName": {
+                "type": "string"
+            },
+            "Description": {
+                "type": "string"
+            },
+            "Odometer": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "OdometerUnit": {
+                "format": "int32",
+                "enum": [0, 1, 2],
+                "type": "integer"
+            },
+            "OdometerUnitText": {
+                "type": "string",
+                "readOnly": true
+            }
+        }
+      },
+      "Blackjack.ViewModels.Vehicle.VehicleDataEditable": {
+          "type": "object",
+          "properties": {
+              "Id": {
+                  "format": "int32",
+                  "type": "integer"
+              },
+              "VIN": {
+                  "type": "string"
+              },
+              "MakeModelCode": {
+                  "type": "string"
+              },
+              "LicensePlate": {
+                  "type": "string"
+              },
+              "Color": {
+                  "format": "int32",
+                  "enum": [0, 128, 255, 32768, 32896, 65280, 6343827, 8388608, 8388736, 8421376, 8421504, 12632256, 16711680, 16711935, 16776960, 16777215],
+                  "type": "integer"
+              },
+              "Make": {
+                  "type": "string"
+              },
+              "Model": {
+                  "type": "string"
+              },
+              "Trim": {
+                  "type": "string"
+              },
+              "YearOfInitialRegistration": {
+                  "format": "int32",
+                  "type": "integer"
+              },
+              "MotorType": {
+                  "format": "int32",
+                  "enum": [0, 1, 2, 3, 4, 5],
+                  "type": "integer"
+              },
+              "ServicePlan": {
+                  "type": "string"
+              },
+              "FriendlyName": {
+                  "type": "string"
+              },
+              "Description": {
+                  "type": "string"
+              },
+              "Odometer": {
+                  "format": "int32",
+                  "type": "integer"
+              },
+              "OdometerUnit": {
+                  "format": "int32",
+                  "enum": [0, 1, 2],
+                  "type": "integer"
+              },
+              "OdometerUnitText": {
+                  "type": "string",
+                  "readOnly": true
+              },
+              "OverrideData": {
+                  "type": "boolean"
+              }
+          }
+      },
+      "Blackjack.ViewModels.Invite.InviteDataEditable": {
+        "required": ["Secret"],
+        "type": "object",
+        "properties": {
+          "Secret": {
+            "type": "string"
+          },
+          "UserName": {
+            "type": "string"
+          },
+          "Contact": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+          }
+		}
+	    },
+      "Blackjack.ViewModels.Policy.PolicyAddViewModel": {
+        "type": "object",
+        "properties": {
+          "Status": {
+            "type": "string",
+            "readOnly": true
+          },
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "CustomerId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Number": {
+            "type": "string"
+          },
+          "DeliveryPersonId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "RequestedDeviceType": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              20,
+              21,
+              22,
+              23,
+              30,
+              40,
+              41,
+              42,
+              43,
+              44,
+              50,
+              51,
+              60
+            ],
+            "type": "integer"
+          },
+          "RequestedTripRecordingMode": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "type": "integer"
+          },
+          "SignDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "StartDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "ExpirationDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "TerminationDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "UniqueRequest": {
+            "type": "string"
+          },
+          "PolicyVehicleUnits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "DeliveryPerson": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+          },
+          "Customer": {
+            "$ref": "#/components/schemas/Blackjack.ViewModels.CustomerData"
+          },
+          "CustomPolicyFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.Policy.CustomPolicyFieldViewModel"
+            }
+          }
+        }
+      },
+      "Blackjack.ViewModels.Upload.UploadedPolicyResults": {
+        "type": "object",
+        "properties": {
+          "Data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.Upload.UploadedPolicyItem"
+            }
+          },
+          "Error": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Blackjack.ViewModels.PreTrips.TripEvent": {
+        "required": ["id", "unit_id", "template_id", "body"],
+        "type": "object",
+        "properties": {
+            "id": {
+                "format": "int64",
+                "type": "integer"
+            },
+            "unit_id": {
+                "maxLength": 2147483647,
+                "minLength": 1,
+                "type": "string"
+            },
+            "template_id": {
+                "format": "int64",
+                "type": "integer"
+            },
+            "body": {
+                "maxLength": 2147483647,
+                "minLength": 1,
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ViewModels.PreTrips.TripMonitoring": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "TenantCode": {
+            "type": "string"
+          },
+          "Number": {
+            "type": "string"
+          },
+          "DeviceId": {
+            "type": "string"
+          },
+          "CreatedOn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "StartSendOn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "SentOn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "Status": {
+            "format": "int32",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "type": "integer"
+          },
+          "IsTrip": {
+            "type": "boolean"
+          },
+          "EventBatches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.TripEventBatchMonitoring"
+            }
+          }
+        }
+      },
+      "Blackjack.ViewModels.PreTrips.TripEventBatchMonitoring": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "BatchId": {
+                "type": "string"
+            },
+            "Username": {
+                "type": "string"
+            },
+            "DeviceId": {
+                "type": "string"
+            },
+            "DeviceName": {
+                "type": "string"
+            },
+            "Start": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "End": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "ContainsTripStart": {
+                "type": "boolean"
+            },
+            "ContainsTripEnd": {
+                "type": "boolean"
+            },
+            "CreatedOn": {
+                "format": "date-time",
+                "type": "string"
+            }
+        }
+      },
+      "Blackjack.ViewModels.PreTrips.TripEventBatchResponse": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "BatchId": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "TripId": {
+            "type": "string"
+          },
+          "PreTripStatus": {
+            "format": "int32",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "type": "integer"
+          },
+          "DeviceId": {
+            "type": "string"
+          },
+          "DeviceName": {
+            "type": "string"
+          },
+          "Start": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "End": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "ContainsTripStart": {
+            "type": "boolean"
+          },
+          "ContainsTripEnd": {
+            "type": "boolean"
+          },
+          "CreatedOn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "SBeaconTripId": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.ViewModels.User.UserData": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "UserName": {
+            "type": "string"
+          },
+          "AdminPermissions": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2,
+              4,
+              8,
+              16,
+              32,
+              64,
+              128,
+              256,
+              512,
+              1024,
+              2048,
+              4096,
+              8192,
+              16384,
+              32768,
+              65536,
+              131072,
+              262144,
+              524288,
+              1048576,
+              2097152,
+              4194304,
+              8388608,
+              16777216,
+              33554432,
+              67108864,
+              134217728,
+              268435456,
+              536870912,
+              1073741824
+            ],
+            "type": "integer"
+          },
+          "UserPermissions": {
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "type": "integer"
+          },
+          "IsDisabled": {
+            "type": "boolean"
+          },
+          "TenantId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "Role": {
+            "type": "string"
+          }
+        }
+      },
+      "Blackjack.Models.Entities.LegacyNotification": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "NotificationType": {
+            "format": "int32",
+            "enum": [
+              1,
+              2,
+              3,
+              7,
+              9,
+              10,
+              11,
+              12,
+              14,
+              16,
+              17,
+              18,
+              20,
+              21,
+              24,
+              25,
+              32,
+              33,
+              34,
+              36,
+              37,
+              38,
+              42,
+              43,
+              44,
+              45,
+              47,
+              48,
+              49,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64,
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71,
+              72,
+              73,
+              74,
+              75,
+              76,
+              77,
+              78,
+              79,
+              80,
+              81,
+              82,
+              83,
+              84,
+              85,
+              86,
+              87,
+              88,
+              89,
+              90,
+              91,
+              92,
+              93,
+              94,
+              95,
+              96
+            ],
+            "type": "integer"
+          },
+          "DateCreated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "LegacyNotificationCreatedOn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "ActionPerformedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "DeliveryInitAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "PolicyId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "GroupMessageId": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "FormattedNotificationTypeDescription": {
+            "type": "string"
+          },
+          "TranslatedNotificationType": {
+            "type": "string"
+          }
+        }
+      },
+      "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.Models.Entities.LegacyNotification]]": {
+        "type": "object",
+        "properties": {
+            "@odata.context": {
+                "type": "string"
+            },
+            "value": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.Models.Entities.LegacyNotification"
+                }
+            }
+        }
+      },
+      "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ODataModels.Entities.NotificationODataItem]]": {
+        "type": "object",
+        "properties": {
+            "@odata.context": {
+                "type": "string"
+            },
+            "value": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ODataModels.Entities.NotificationODataItem"
+                }
+            }
+        }
+      },
+      "Blackjack.ODataModels.Entities.NotificationODataItem": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "NotificationType": {
+                "format": "int32",
+                "enum": [1, 2, 3, 7, 9, 10, 11, 12, 14, 16, 17, 18, 20, 21, 24, 25, 32, 33, 34, 36, 37, 38, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96],
+                "type": "integer"
+            },
+            "DateCreated": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "DeliveryInitAt": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "ActionPerformedAt": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "CreatedInExternalSystemOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "DeliveryMethods": {
+                "format": "int32",
+                "enum": [0, 1, 2, 4, 8, 16],
+                "type": "integer"
+            },
+            "PolicyId": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "GroupMessageId": {
+                "format": "int32",
+                "type": "integer"
+            }
+        }
+      },
+      "Blackjack.ViewModels.PreTrips.TripSimpleMonitoring": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "Number": {
+                "type": "string"
+            },
+            "DeviceId": {
+                "type": "string"
+            },
+            "CreatedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "StartSendOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "SentOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "Status": {
+                "format": "int32",
+                "enum": [1, 2, 3, 4, 5, 6, 7],
+                "type": "integer"
+            },
+            "IsTrip": {
+                "type": "boolean"
+            }
+        }
+      },
+      "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ViewModels.SubscriptionChange.SubscriptionChangeViewModel]]": {
+          "type": "object",
+          "properties": {
+              "@odata.context": {
+                  "type": "string"
+              },
+              "value": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/components/schemas/Blackjack.ViewModels.SubscriptionChange.SubscriptionChangeViewModel"
+                  }
+              }
+          }
+      },
+      "Blackjack.ViewModels.SubscriptionChange.SubscriptionChangeViewModel": {
+          "type": "object",
+          "properties": {
+              "Id": {
+                  "format": "int32",
+                  "type": "integer"
+              },
+              "Type": {
+                  "format": "int32",
+                  "enum": [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 20, 30, 40, 41, 42, 43, 45, 50, 60],
+                  "type": "integer"
+              },
+              "SourceType": {
+                  "format": "int32",
+                  "enum": [0, 1, 2, 3, 4, 5],
+                  "type": "integer"
+              },
+              "SourceLocation": {
+                  "type": "string"
+              },
+              "BeganOn": {
+                  "format": "date-time",
+                  "type": "string"
+              },
+              "EndedOn": {
+                  "format": "date-time",
+                  "type": "string"
+              }
+          }
+      },
+      "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ODataModels.Entities.UnitActivityIntervalODataItem]]": {
+        "type": "object",
+        "properties": {
+            "@odata.context": {
+                "type": "string"
+            },
+            "value": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Blackjack.ODataModels.Entities.UnitActivityIntervalODataItem"
+                }
+            }
+        }
+    },
+    "Blackjack.ODataModels.Entities.UnitActivityIntervalODataItem": {
+        "type": "object",
+        "properties": {
+            "Id": {
+                "format": "int64",
+                "type": "integer"
+            },
+            "PolicyVehicleUnitId": {
+                "format": "int32",
+                "type": "integer"
+            },
+            "PolicyNumber": {
+                "type": "string"
+            },
+            "UnitSerialNumber": {
+                "type": "string"
+            },
+            "VehicleNumber": {
+                "type": "string"
+            },
+            "MZoneVehicleId": {
+                "format": "uuid",
+                "type": "string"
+            },
+            "UnitAssignedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "UnitUnassignedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "PolicyStartedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "PolicyTerminatedOn": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "Start": {
+                "format": "date-time",
+                "type": "string"
+            },
+            "End": {
+                "format": "date-time",
+                "type": "string"
+            }
+        }
+      
+    },
+    "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.Models.Entities.Vehicle]]": {
+      "type": "object",
+      "properties": {
+          "@odata.context": {
+              "type": "string"
+          },
+          "value": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Blackjack.Models.Entities.Vehicle"
+              }
+          }
+      }
+    },
+    "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ViewModels.Policy.PolicyUploadModel]]": {
+      "type": "object",
+      "properties": {
+          "@odata.context": {
+              "type": "string"
+          },
+          "value": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.Policy.PolicyUploadModel"
+              }
+          }
+      }
+  },
+  "Blackjack.ViewModels.Policy.PolicyUploadModel": {
+      "type": "object",
+      "properties": {
+          "Id": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "UserName": {
+              "type": "string"
+          },
+          "DateCreated": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "FileBinaryContent": {
+              "format": "byte",
+              "type": "string"
+          },
+          "FileName": {
+              "type": "string"
+          },
+          "ImportedCount": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "HasErrors": {
+              "type": "boolean"
+          },
+          "Errors": {
+              "type": "string"
+          }
+      }
+    },
+    "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ODataModels.Entities.PolicyVehicleUnitODataItem]]": {
+      "type": "object",
+      "properties": {
+          "@odata.context": {
+              "type": "string"
+          },
+          "value": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Blackjack.ODataModels.Entities.PolicyVehicleUnitODataItem"
+              }
+          }
+      }
+    },
+    "Blackjack.ODataModels.Entities.PolicyVehicleUnitODataItem": {
+      "type": "object",
+      "properties": {
+          "Id": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "PolicyId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "UnitId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "VehicleId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "AllowMultipleRegistrations": {
+              "type": "boolean"
+          },
+          "UnitInstallLocation": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "UnitAssignmentDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "UnitActivationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "TrackingNumber": {
+              "type": "string"
+          },
+          "Status": {
+              "format": "int32",
+              "enum": [1, 2, 4, 8, 16, 32, 64, 128, 256],
+              "type": "integer"
+          },
+          "IsExpired": {
+              "type": "boolean"
+          },
+          "TerminationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "MZoneVehicleId": {
+              "format": "uuid",
+              "type": "string"
+          },
+          "PlaceId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "ExpirationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "DeviceReturnedOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "MLogEndDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "MLogEndDateType": {
+              "format": "int32",
+              "enum": [0, 1, 2],
+              "type": "integer"
+          },
+          "PreventDispatcherSelectiveDataSync": {
+              "type": "boolean"
+          },
+          "LinkedBeaconMac": {
+              "type": "string"
+          },
+          "AccessGroupSubscriptionNames": {
+              "type": "array",
+              "items": {
+                  "type": "string"
+              },
+              "readOnly": true
+          }
+      }
+    },
+    "Swashbuckle.OData.ODataResponse[System.Collections.Generic.List[Blackjack.ViewModels.PreTrips.PreTripViewModel]]": {
+      "type": "object",
+      "properties": {
+          "@odata.context": {
+              "type": "string"
+          },
+          "value": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Blackjack.ViewModels.PreTrips.PreTripViewModel"
+              }
+          }
+      }
+  },
+  "Blackjack.ViewModels.PreTrips.PreTripViewModel": {
+      "type": "object",
+      "properties": {
+          "Id": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "Number": {
+              "type": "string"
+          },
+          "Start": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "End": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "PreTripStatus": {
+              "format": "int32",
+              "enum": [1, 2, 3, 4, 5, 6, 7],
+              "type": "integer"
+          },
+          "CreatedOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "ConflictedUsers": {
+              "type": "string"
+          },
+          "ConflictLabelSentOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "ConflictResolvedOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "SBeaconTripId": {
+              "type": "string"
+          }
+      }
+    },
+    "Blackjack.Models.Entities.PolicyVehicleUnit": {
+      "type": "object",
+      "properties": {
+          "Id": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "PolicyId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "UnitId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "VehicleId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "AllowMultipleRegistrations": {
+              "type": "boolean"
+          },
+          "UnitInstallLocation": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "UnitAssignmentDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "UnitAssignedInPortalOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "UnitActivationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "TrackingNumber": {
+              "type": "string"
+          },
+          "Status": {
+              "format": "int32",
+              "enum": [1, 2, 4, 8, 16, 32, 64, 128, 256],
+              "type": "integer"
+          },
+          "IsExpired": {
+              "type": "boolean"
+          },
+          "TerminationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "MZoneVehicleId": {
+              "format": "uuid",
+              "type": "string"
+          },
+          "PlaceId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "ExpirationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "DeviceReturnedOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "MLogEndDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "MLogEndDateType": {
+              "format": "int32",
+              "enum": [0, 1, 2],
+              "type": "integer"
+          },
+          "FirstTripInviteSentOn": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "PreventDispatcherSelectiveDataSync": {
+              "type": "boolean"
+          },
+          "ReturnJobNumber": {
+              "type": "string"
+          },
+          "ReturnTrackingNumber": {
+              "type": "string"
+          },
+          "ReturnBookedShipmentId": {
+              "format": "int64",
+              "type": "integer"
+          },
+          "IsActivated": {
+              "type": "boolean",
+              "readOnly": true
+          }
+      }
+    },
+    "Blackjack.ViewModels.InsuredVehicleUserData": {
+      "type": "object",
+      "properties": {
+          "Permissions": {
+              "format": "int32",
+              "enum": [0, 1, 2, 4],
+              "type": "integer"
+          },
+          "FriendlyName": {
+              "type": "string"
+          },
+          "FullFriendlyName": {
+              "type": "string"
+          },
+          "PolicyVehicleUnitUserId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "IsDefaultDriver": {
+              "type": "boolean"
+          },
+          "ExpirationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "ExpirationStatus": {
+              "format": "int32",
+              "enum": [0, 1, 3],
+              "type": "integer"
+          },
+          "TripRecordingMode": {
+              "format": "int32",
+              "enum": [0, 1, 2, 3, 4],
+              "type": "integer"
+          },
+          "PolicyVehicleUnitId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "MZoneVehicleId": {
+              "type": "string"
+          },
+          "HasServicePlan": {
+              "type": "boolean"
+          },
+          "PolicyId": {
+              "format": "int32",
+              "type": "integer"
+          },
+          "PolicyNumber": {
+              "type": "string"
+          },
+          "PolicyCustomer": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.CustomerData"
+          },
+          "PolicyDeliveryPerson": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.ContactsData"
+          },
+          "PolicyStartDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "PolicyTerminationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "TerminationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "Vehicle": {
+              "$ref": "#/components/schemas/Blackjack.ViewModels.Vehicle.VehicleData"
+          },
+          "UnitId": {
+              "type": "string"
+          },
+          "UnitSerialNumber": {
+              "type": "string"
+          },
+          "UnitType": {
+              "type": "string"
+          },
+          "UnitAssignmentDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "UnitActivationDate": {
+              "format": "date-time",
+              "type": "string"
+          },
+          "RequestedDeviceType": {
+              "format": "int32",
+              "enum": [0, 1, 2, 3, 4, 5, 20, 21, 22, 23, 30, 40, 41, 42, 43, 44, 50, 51, 60],
+              "type": "integer"
+          },
+          "IsExpired": {
+              "type": "boolean"
+          },
+          "TrackingNumber": {
+              "type": "string"
+          }
+      }
+    },
+    "Blackjack.ViewModels.Upload.UploadedPolicyItem": {
+      "type": "object",
+      "properties": {
+          "Number": {
+              "type": "string"
+          },
+          "DeviceType": {
+              "type": "string"
+          },
+          "CustomerNumber": {
+              "type": "string"
+          },
+          "VehicleVIN": {
+              "type": "string"
+          }
+      }
+    }
+    },
+    "securitySchemes": {}
+  },
+  "servers": []
+}

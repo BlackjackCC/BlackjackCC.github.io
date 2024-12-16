@@ -43,8 +43,11 @@
             const ui = SwaggerUIBundle({
                 //url: "docs/Gzone2 proxy.json",
                 urls: [{
-                    url: "docs/CCP v1_78.json",
-                    name: "1. Connected Car v1.78"
+                    url: "docs/CCP_v1.79_minimal.json",
+                    name: "1. Minimal Connected Car v1.79"
+				}, {
+                    url: "docs/CCP_v1.79_full.json",
+                    name: "2. Full Connected Car v1.79"
 				}, {
                     url: "docs/CCP v1_73.json",
                     name: "2. Connected Car v1.73"
@@ -58,7 +61,7 @@
                     url: "docs/Social connections.json",
                     name: "5. Social connections"
                 }],
-                "urls.primaryName": "1. Connected Car v1.78",
+                "urls.primaryName": "1. Minimal Connected Car v1.79",
                 dom_id: '#swagger-ui',
                 deepLinking: true,
                 presets: [
